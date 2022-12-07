@@ -61,7 +61,7 @@ void DoomSubsystem::OnDoomLoop()
 	Robot::m_doomSubsystem.UpdateMat();
 
 	
-
+	// TODO Craft joystick input into event_t and send to D_PostEvent
 	// TODO Send joystick inputs to the engine
 }
 
