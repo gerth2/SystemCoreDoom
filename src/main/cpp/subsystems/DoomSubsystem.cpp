@@ -11,6 +11,7 @@ DoomSubsystem::DoomSubsystem(frc::XboxController *controller)
 	this->mat = cv::Mat(SCREEN_HEIGHT, SCREEN_WIDTH, CV_8UC3);
 	this->doomRunning = false;
 	this->driver = controller;
+	
 }
 
 void DoomSubsystem::Periodic()
@@ -54,6 +55,29 @@ void DoomSubsystem::LaunchDoom()
 	D_DoomMain();
 }
 
+void sendStick(double x, double y, bool button1, bool button2, bool button3)
+{
+	event_t event = {ev_mouse, 0, 0, 0};
+	event.data1 |= button1 ? 1 : 0;
+	event.data1 |= button2 ? 2 : 0;
+	event.data1 |= button3 ? 4 : 0;
+	event.data2 = ((int)(x * SCREEN_WIDTH)) << 2;
+	event.data3 = ((int)(y * SCREEN_HEIGHT)) << 2;
+	D_PostEvent(&event);
+}
+
+void sendKeyDown(int key)
+{
+	event_t event = {ev_keydown, key, 0, 0};
+	D_PostEvent(&event);
+}
+
+void sendKeyUp(int key)
+{
+	event_t event = {ev_keyup, key, 0, 0};
+	D_PostEvent(&event);
+}
+
 void DoomSubsystem::OnDoomLoop()
 {
 
@@ -63,12 +87,15 @@ void DoomSubsystem::OnDoomLoop()
 
 	
 	// TODO Craft joystick input into event_t and send to D_PostEvent
-	
+	// sendStick
 	// TODO Send joystick inputs to the engine
 }
 
 void DoomSubsystem::UpdateMat()
 {	
+	sendStick(this->driver->GetLeftX(), this->driver->GetLeftY(),
+		this->driver->GetAButton(), this->driver->GetBButton(), this->driver->GetXButton());
+
 	// Get the current screen buffer
 	byte palette[256 * 3];
 	byte screen[SCREEN_WIDTH * SCREEN_HEIGHT];

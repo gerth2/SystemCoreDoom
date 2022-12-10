@@ -235,7 +235,8 @@ void I_GetEvent(void)
     case ButtonPress:
         event.type = ev_mouse;
         event.data1 =
-            (X_event.xbutton.state & Button1Mask) | (X_event.xbutton.state & Button2Mask ? 2 : 0) | (X_event.xbutton.state & Button3Mask ? 4 : 0) | (X_event.xbutton.button == Button1) | (X_event.xbutton.button == Button2 ? 2 : 0) | (X_event.xbutton.button == Button3 ? 4 : 0);
+            (X_event.xbutton.state & Button1Mask) | (X_event.xbutton.state & Button2Mask ? 2 : 0) | (X_event.xbutton.state & Button3Mask ? 4 : 0) | 
+            (X_event.xbutton.button == Button1) | (X_event.xbutton.button == Button2 ? 2 : 0) | (X_event.xbutton.button == Button3 ? 4 : 0);
         event.data2 = event.data3 = 0;
         D_PostEvent(&event);
         // fprintf(stderr, "b");
