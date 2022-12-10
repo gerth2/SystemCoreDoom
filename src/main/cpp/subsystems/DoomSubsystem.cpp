@@ -48,9 +48,9 @@ void DoomSubsystem::StopEngine()
 void DoomSubsystem::LaunchDoom()
 {
 	D_SetLoopHook(&DoomSubsystem::OnDoomLoop);
-
-	myargc = 0;
-	myargv = {};
+	myargc = 1;
+	myargv = {NULL};
+	myargv[0] = strdup("-regdev");
 
 	D_DoomMain();
 }
