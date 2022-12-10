@@ -55,27 +55,31 @@ void DoomSubsystem::LaunchDoom()
 	D_DoomMain();
 }
 
-void sendStick(double x, double y, bool button1, bool button2, bool button3)
+void sendStick(double x, double y, bool button1, bool button2, bool button3, bool button4)
 {
-	event_t event = {ev_mouse, 0, 0, 0};
+	event_t event = {ev_joystick, 0, 0, 0};
 	event.data1 |= button1 ? 1 : 0;
 	event.data1 |= button2 ? 2 : 0;
 	event.data1 |= button3 ? 4 : 0;
-	event.data2 = ((int)(x * SCREEN_WIDTH)) << 2;
+	event.data1 |= button3 ? 8 : 0;
+	event.data2 = ((int)(x * SCREEN_WIDTH)) << 2; // Probably wrong
 	event.data3 = ((int)(y * SCREEN_HEIGHT)) << 2;
 	D_PostEvent(&event);
 }
 
 void DoomSubsystem::sendKeyDown(int key)
 {
+	// Keys are processed between Menu and game, menu is in M_Responder, game is in G_Responder.
 	event_t event = {ev_keydown, key, 0, 0};
 	D_PostEvent(&event);
+	
 }
 
 void DoomSubsystem::sendKeyUp(int key)
 {
 	event_t event = {ev_keyup, key, 0, 0};
 	D_PostEvent(&event);
+	// Actual events occur in G_BuildTiccmd g_game.c
 }
 
 void DoomSubsystem::OnDoomLoop()
@@ -94,7 +98,7 @@ void DoomSubsystem::OnDoomLoop()
 void DoomSubsystem::UpdateMat()
 {	
 	sendStick(this->driver->GetLeftX(), this->driver->GetLeftY(),
-		this->driver->GetAButton(), this->driver->GetBButton(), this->driver->GetXButton());
+		this->driver->GetAButton(), this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
 
 	// Get the current screen buffer
 	byte palette[256 * 3];
