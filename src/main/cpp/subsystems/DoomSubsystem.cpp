@@ -6,10 +6,11 @@
 #include "subsystems/DoomSubsystem.h"
 #include "Robot.h"
 
-DoomSubsystem::DoomSubsystem()
+DoomSubsystem::DoomSubsystem(frc::XboxController *controller)
 {
 	this->mat = cv::Mat(SCREEN_HEIGHT, SCREEN_WIDTH, CV_8UC3);
 	this->doomRunning = false;
+	this->driver = controller;
 }
 
 void DoomSubsystem::Periodic()
@@ -62,6 +63,7 @@ void DoomSubsystem::OnDoomLoop()
 
 	
 	// TODO Craft joystick input into event_t and send to D_PostEvent
+	
 	// TODO Send joystick inputs to the engine
 }
 

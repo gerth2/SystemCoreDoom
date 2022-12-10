@@ -7,7 +7,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
 
-DoomSubsystem Robot::m_doomSubsystem = DoomSubsystem();
+DoomSubsystem Robot::m_doomSubsystem = DoomSubsystem(new frc::XboxController(0));
 
 void Robot::RobotInit()
 {

@@ -24,11 +24,12 @@ extern "C"
 	#include "headless_doom/m_argv.h"
 	#include "headless_doom/d_main.h"
 }
+#include "frc/XboxController.h"
 
 class DoomSubsystem : public frc2::SubsystemBase
 {
 public:
-	DoomSubsystem();
+	DoomSubsystem(frc::XboxController*);
 
 	/**
 	 * Will be called periodically whenever the CommandScheduler runs.
@@ -45,6 +46,7 @@ private:
 	cv::Mat mat;
 	cs::CvSource videoStream;
 	cs::CvSink cvSink;
+	frc::XboxController* driver;
 
 	void UpdateMat();
 	static void LaunchDoom();
