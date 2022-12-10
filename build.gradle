@@ -1,7 +1,7 @@
 plugins {
     id "cpp"
     id "c"
-    id "edu.wpi.first.GradleRIO" version "2022.3.1"
+    id "edu.wpi.first.GradleRIO" version "2022.4.1"
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -37,7 +37,7 @@ deploy {
 def deployArtifact = deploy.targets.roborio.artifacts.frcCpp
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = true
+def includeDesktopSupport = false
 
 // Set to true to run simulation in debug mode
 wpi.cpp.debugSimulation = false
@@ -64,6 +64,7 @@ model {
                     }
                     exportedHeaders {
                         srcDir 'src/main/include'
+                        srcDir 'src/main/include/headless_doom'
                     }
                 }
                 c {
@@ -73,6 +74,7 @@ model {
                     }
                     exportedHeaders {
                         srcDir 'src/main/include'
+                        srcDir 'src/main/include/headless_doom'
                     }
                 }
             }
@@ -81,6 +83,7 @@ model {
                 linker.args.add('-lm')
                 cCompiler.args.add('-DNORMALUNIX')
                 cCompiler.args.add('-DLINUX')
+                cCompiler.args.add('-w') // Removes all warnings
             }
 
             // Set deploy task to deploy this component
