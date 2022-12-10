@@ -28,8 +28,7 @@ void DoomSubsystem::StartEngine()
 	printf("Starting DOOM Engine\n");
 
 	this->doomRunning = true;
-
-	frc::CameraServer::AddServer("test_server");
+	// frc::CameraServer::StartAutomaticCapture();
 
 	this->cvSink = frc::CameraServer::GetVideo();
 	this->videoStream = frc::CameraServer::PutVideo("doom", SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -48,22 +47,24 @@ void DoomSubsystem::StopEngine()
 void DoomSubsystem::LaunchDoom()
 {
 	D_SetLoopHook(&DoomSubsystem::OnDoomLoop);
-	myargc = 1;
-	myargv = {NULL};
-	myargv[0] = strdup("-regdev");
+	myargc = 0;
+	myargv = {};
+	// myargv[0] = strdup("-regdev");
 
 	D_DoomMain();
 }
 
 void sendStick(double x, double y, bool button1, bool button2, bool button3, bool button4)
 {
+	// x = x < 0 ? 0 : x;
+	y = y > 0 ? 0 : y;
 	event_t event = {ev_joystick, 0, 0, 0};
 	event.data1 |= button1 ? 1 : 0;
 	event.data1 |= button2 ? 2 : 0;
 	event.data1 |= button3 ? 4 : 0;
 	event.data1 |= button3 ? 8 : 0;
-	event.data2 = ((int)(x * SCREEN_WIDTH)) << 2; // Probably wrong
-	event.data3 = ((int)(y * SCREEN_HEIGHT)) << 2;
+	event.data2 = ((int)(x * SCREEN_WIDTH)/10); // Probably wrong
+	event.data3 = ((int)(y * SCREEN_HEIGHT)/10);
 	D_PostEvent(&event);
 }
 
@@ -85,7 +86,7 @@ void DoomSubsystem::sendKeyUp(int key)
 void DoomSubsystem::OnDoomLoop()
 {
 
-	// printf("Loop hook called!\n");
+	printf("Loop hook called!\n");
 	// Update the screen
 	Robot::m_doomSubsystem.UpdateMat();
 
@@ -97,8 +98,8 @@ void DoomSubsystem::OnDoomLoop()
 
 void DoomSubsystem::UpdateMat()
 {	
-	sendStick(this->driver->GetLeftX(), this->driver->GetLeftY(),
-		this->driver->GetAButton(), this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
+	sendStick(this->driver->GetRightX() + this->driver->GetLeftX(), this->driver->GetLeftY() + this->driver->GetRightY(),
+		this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.5), this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
 
 	// Get the current screen buffer
 	byte palette[256 * 3];
