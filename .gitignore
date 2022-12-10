@@ -140,7 +140,6 @@ $RECYCLE.BIN/
 /build/
 .idea
 .vscode
-.wpilib
 
 # Ignore Gradle GUI config
 gradle-app.setting
