@@ -42,11 +42,15 @@ public:
 
 	bool doomRunning;
 
+	void sendKeyDown(int key);
+	void sendKeyUp(int key);
+	
+	frc::XboxController* driver;
+
 private:
 	cv::Mat mat;
 	cs::CvSource videoStream;
 	cs::CvSink cvSink;
-	frc::XboxController* driver;
 
 	void UpdateMat();
 	static void LaunchDoom();

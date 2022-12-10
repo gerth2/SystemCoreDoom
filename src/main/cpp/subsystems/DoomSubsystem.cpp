@@ -66,13 +66,13 @@ void sendStick(double x, double y, bool button1, bool button2, bool button3)
 	D_PostEvent(&event);
 }
 
-void sendKeyDown(int key)
+void DoomSubsystem::sendKeyDown(int key)
 {
 	event_t event = {ev_keydown, key, 0, 0};
 	D_PostEvent(&event);
 }
 
-void sendKeyUp(int key)
+void DoomSubsystem::sendKeyUp(int key)
 {
 	event_t event = {ev_keyup, key, 0, 0};
 	D_PostEvent(&event);
