@@ -57,7 +57,7 @@ void DoomSubsystem::LaunchDoom()
 void sendStick(double x, double y, bool button1, bool button2, bool button3, bool button4)
 {
 	// x = x < 0 ? 0 : x;
-	y = y > 0 ? 0 : y;
+	// y = y > 0 ? 0 : y;
 	event_t event = {ev_joystick, 0, 0, 0};
 	event.data1 |= button1 ? 1 : 0;
 	event.data1 |= button2 ? 2 : 0;
