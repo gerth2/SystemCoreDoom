@@ -11,6 +11,9 @@ DoomSubsystem::DoomSubsystem(frc::XboxController *controller)
 	this->mat = cv::Mat(SCREEN_HEIGHT, SCREEN_WIDTH, CV_8UC3);
 	this->doomRunning = false;
 	this->driver = controller;
+
+	this->x = 0;
+	this->y = 0;
 	
 }
 
@@ -18,6 +21,8 @@ void DoomSubsystem::Periodic()
 {
 	static int periods = 0;
 
+	
+	
 	// TODO - collect joystick movements
 
 	frc::SmartDashboard::PutNumber("periods", ++periods);
@@ -54,7 +59,7 @@ void DoomSubsystem::LaunchDoom()
 	D_DoomMain();
 }
 
-void sendStick(double x, double y, bool button1, bool button2, bool button3, bool button4)
+void sendStick(int x, int y, bool button1, bool button2, bool button3, bool button4)
 {
 	// x = x < 0 ? 0 : x;
 	// y = y > 0 ? 0 : y;
@@ -63,8 +68,10 @@ void sendStick(double x, double y, bool button1, bool button2, bool button3, boo
 	event.data1 |= button2 ? 2 : 0;
 	event.data1 |= button3 ? 4 : 0;
 	event.data1 |= button3 ? 8 : 0;
-	event.data2 = ((int)(x * SCREEN_WIDTH)/10); // Probably wrong
-	event.data3 = ((int)(y * SCREEN_HEIGHT)/10);
+	// event.data2 = ((int)(x * SCREEN_WIDTH)/10); // Probably wrong
+	// event.data3 = ((int)(y * SCREEN_HEIGHT)/10);
+	event.data2 = x; // Probably wrong
+	event.data3 = y;
 	D_PostEvent(&event);
 }
 
@@ -85,22 +92,40 @@ void DoomSubsystem::sendKeyUp(int key)
 
 void DoomSubsystem::OnDoomLoop()
 {
+	
 
 	printf("Loop hook called!\n");
 	// Update the screen
 	Robot::m_doomSubsystem.UpdateMat();
 
 	
-	// TODO Craft joystick input into event_t and send to D_PostEvent
+	
 	// sendStick
 	// TODO Send joystick inputs to the engine
 }
 
 void DoomSubsystem::UpdateMat()
 {	
-	sendStick(this->driver->GetRightX() + this->driver->GetLeftX(), this->driver->GetLeftY() + this->driver->GetRightY(),
-		this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.5), this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
+	double driverx = (this->driver->GetLeftX()+this->driver->GetRightX())/2;
+	double drivery = (this->driver->GetLeftY()+this->driver->GetRightY())/2;
+	int x = 0, y = 0;
 
+	if(fabs(driverx) < 0.15)
+		x = 0;
+	else if (driverx > 0 )
+		x = 1;
+	else
+		x = -1;
+
+	if(fabs(drivery) < 0.15)
+		y = 0;
+	else if (drivery > 0 )
+		y = 1;
+	else
+		y = -1;
+	
+	sendStick(x,y, this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.5), this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
+	
 	// Get the current screen buffer
 	byte palette[256 * 3];
 	byte screen[SCREEN_WIDTH * SCREEN_HEIGHT];

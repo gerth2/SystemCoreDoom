@@ -51,6 +51,7 @@ private:
 	cv::Mat mat;
 	cs::CvSource videoStream;
 	cs::CvSink cvSink;
+	double x, y;
 
 	void UpdateMat();
 	static void LaunchDoom();
