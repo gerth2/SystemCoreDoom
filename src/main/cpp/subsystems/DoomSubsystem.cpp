@@ -64,11 +64,9 @@ void sendStick(int x, int y, bool button1, bool button2, bool button3, bool butt
 	event_t event = {ev_joystick, 0, 0, 0};
 	event.data1 |= button1 ? 1 : 0;
 	event.data1 |= button2 ? 2 : 0;
-	event.data1 |= button3 ? 4 : 0;
+	event.data1 |= button4 ? 4 : 0;
 	event.data1 |= button3 ? 8 : 0;
-	// event.data2 = ((int)(x * SCREEN_WIDTH)/10); // Probably wrong
-	// event.data3 = ((int)(y * SCREEN_HEIGHT)/10);
-	event.data2 = x; // Probably wrong
+	event.data2 = x;
 	event.data3 = y;
 	D_PostEvent(&event);
 }
@@ -107,9 +105,10 @@ void DoomSubsystem::OnDoomLoop()
 void DoomSubsystem::UpdateMat()
 {	
 	int pov = this->driver->GetPOV(0);
-	double driverx = (this->driver->GetLeftX()+this->driver->GetRightX())/2;
+	double driverx = this->driver->GetLeftX();
+	double driverrx = this->driver->GetRawAxis(4);
 	double drivery = (this->driver->GetLeftY()+this->driver->GetRightY())/2;
-	int x = 0, y = 0;
+	int x = 0, y = 0, strafe = 0;
 
 	if(fabs(driverx) < 0.15)
 		x = 0;
@@ -124,7 +123,30 @@ void DoomSubsystem::UpdateMat()
 		y = 1;
 	else
 		y = -1;
-	
+
+
+	if(fabs(driverrx) < 0.25)
+		strafe = 0;
+	else if (driverrx > 0 )
+		strafe = 1;
+	else
+		strafe = -1;
+		
+	if(this->releaseStrafe)
+	{
+		sendKeyUp(this->strafe > 0 ? '.' : ',');
+		this->releaseStrafe = false;
+	}else if (strafe > 0)
+	{
+		this->strafe = strafe;
+		sendKeyDown('.');
+		this->releaseStrafe = true;
+	}else if (strafe < 0)
+	{
+		this->strafe = strafe;
+		sendKeyDown(',');
+		this->releaseStrafe = true;
+	}
 	
 	if(this->releaseWeaponChange)
 	{

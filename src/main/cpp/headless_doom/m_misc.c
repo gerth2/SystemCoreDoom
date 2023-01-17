@@ -264,6 +264,9 @@ default_t defaults[] =
         {"joyb_strafe", &joybstrafe, 1},
         {"joyb_use", &joybuse, 3},
         {"joyb_speed", &joybspeed, 2},
+        
+        {"key_strafeleft", &key_strafeleft, ','},
+        {"key_straferight", &key_straferight, '.'},
 
         {"screenblocks", &screenblocks, 9},
         {"detaillevel", &detailLevel, 0},
@@ -271,6 +274,8 @@ default_t defaults[] =
         {"snd_channels", &numChannels, 3},
 
         {"usegamma", &usegamma, 0},
+
+        
 
 #if 0
 
