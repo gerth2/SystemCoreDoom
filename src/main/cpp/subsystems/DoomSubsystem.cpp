@@ -12,9 +12,7 @@ DoomSubsystem::DoomSubsystem(frc::XboxController *controller)
 	this->doomRunning = false;
 	this->driver = controller;
 
-	this->x = 0;
-	this->y = 0;
-	
+	this->weapon = 0;
 }
 
 void DoomSubsystem::Periodic()
@@ -104,8 +102,11 @@ void DoomSubsystem::OnDoomLoop()
 	// TODO Send joystick inputs to the engine
 }
 
+#define CLAMP(x, min, max) x > max ? max : (x < min ? min : x)
+
 void DoomSubsystem::UpdateMat()
 {	
+	int pov = this->driver->GetPOV(0);
 	double driverx = (this->driver->GetLeftX()+this->driver->GetRightX())/2;
 	double drivery = (this->driver->GetLeftY()+this->driver->GetRightY())/2;
 	int x = 0, y = 0;
@@ -124,7 +125,43 @@ void DoomSubsystem::UpdateMat()
 	else
 		y = -1;
 	
-	sendStick(x,y, this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.5), this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
+	
+	if(this->releaseWeaponChange)
+	{
+		this->releaseWeaponChange = false;
+		sendKeyUp('1'+(this->weapon));
+	}else if(pov == 0)
+	{
+		this->weapon -= 3;
+		this->weapon = CLAMP(this->weapon, 1, 7);
+		this->releaseWeaponChange = true;
+		sendKeyDown('1'+(this->weapon));
+	}else if (pov == 180)
+	{
+		this->weapon += 3;
+		this->weapon = CLAMP(this->weapon, 1, 7);
+
+		this->releaseWeaponChange = true;
+		sendKeyDown('1'+(this->weapon));
+	}else if (pov == 90)
+	{
+		this->weapon += 1;
+		this->weapon = CLAMP(this->weapon, 1, 7);
+
+		this->releaseWeaponChange = true;
+		sendKeyDown('1'+(this->weapon));
+	}else if (pov == 270)
+	{
+		this->weapon -= 1;
+		this->weapon = CLAMP(this->weapon, 1, 7);
+
+		this->releaseWeaponChange = true;
+		sendKeyDown('1'+(this->weapon));
+	}
+	
+
+	sendStick(x,y, this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.5),
+	 this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
 	
 	// Get the current screen buffer
 	byte palette[256 * 3];

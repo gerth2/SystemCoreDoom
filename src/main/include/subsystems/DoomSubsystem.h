@@ -51,8 +51,8 @@ private:
 	cv::Mat mat;
 	cs::CvSource videoStream;
 	cs::CvSink cvSink;
-	double x, y;
-
+	int weapon;
+	bool releaseWeaponChange;
 	void UpdateMat();
 	static void LaunchDoom();
 };

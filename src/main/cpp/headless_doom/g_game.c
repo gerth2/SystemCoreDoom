@@ -342,6 +342,7 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     for (i=0 ; i<NUMWEAPONS-1 ; i++)        
 	if (gamekeydown['1'+i]) 
 	{ 
+        printf("Switching weapon to %d\n", i);
 	    cmd->buttons |= BT_CHANGE; 
 	    cmd->buttons |= i<<BT_WEAPONSHIFT; 
 	    break; 
