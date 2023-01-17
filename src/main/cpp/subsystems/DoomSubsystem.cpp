@@ -182,8 +182,8 @@ void DoomSubsystem::UpdateMat()
 	}
 	
 
-	sendStick(x,y, this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.5),
-	 this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton());
+	sendStick(x,y, this->driver->GetRightBumper() || this->driver->GetAButton() || (this->driver->GetRightTriggerAxis() > 0.1),
+	 this->driver->GetBButton(), this->driver->GetXButton(), this->driver->GetYButton() || this->driver->GetLeftTriggerAxis() > 0.5);
 	
 	// Get the current screen buffer
 	byte palette[256 * 3];
