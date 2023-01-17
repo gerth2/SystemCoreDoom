@@ -31,7 +31,6 @@ void DoomSubsystem::StartEngine()
 	printf("Starting DOOM Engine\n");
 
 	this->doomRunning = true;
-	// frc::CameraServer::StartAutomaticCapture();
 
 	this->cvSink = frc::CameraServer::GetVideo();
 	this->videoStream = frc::CameraServer::PutVideo("doom", SCREEN_WIDTH, SCREEN_HEIGHT);

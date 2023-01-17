@@ -11,8 +11,6 @@ DoomSubsystem Robot::m_doomSubsystem = DoomSubsystem(new frc::XboxController(0))
 
 void Robot::RobotInit()
 {
-	frc::CameraServer::StartAutomaticCapture();
-	frc::CameraServer::AddServer("test_server");
 
 	ConfigureButtonBindings();
 }
