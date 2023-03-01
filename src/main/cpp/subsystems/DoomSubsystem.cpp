@@ -104,8 +104,8 @@ void DoomSubsystem::OnDoomLoop()
 void DoomSubsystem::UpdateMat()
 {	
 	int pov = this->driver->GetPOV(0);
-	double driverx = this->driver->GetLeftX();
-	double driverrx = this->driver->GetRawAxis(4);
+	double driverrx = this->driver->GetLeftX();
+	double driverx = this->driver->GetRawAxis(4);
 	double drivery = (this->driver->GetLeftY()+this->driver->GetRightY())/2;
 	int x = 0, y = 0, strafe = 0;
 
