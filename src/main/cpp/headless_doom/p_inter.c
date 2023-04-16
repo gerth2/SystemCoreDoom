@@ -887,8 +887,10 @@ P_DamageMobj
     target->health -= damage;	
     if (target->health <= 0)
     {
-	P_KillMobj (source, target);
-	return;
+		fprintf(stderr,"DIE MONSTER DIE!!\n");
+		drive_func(100,100,0);
+		P_KillMobj (source, target);
+		return;
     }
 
     if ( (P_Random () < target->info->painchance)

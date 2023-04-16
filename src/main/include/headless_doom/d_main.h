@@ -38,8 +38,6 @@ extern char*		wadfiles[MAXWADFILES];
 
 void D_AddFile (char *file);
 
-
-
 //
 // D_DoomMain()
 // Not a globally visible function, just included for source reference,
@@ -51,7 +49,7 @@ void D_DoomMain (void);
 // Called by IO functions when input is detected.
 void D_PostEvent (event_t* ev);
 
-void D_SetLoopHook(void (*hook)());
+void D_SetLoopHook(void (*hook)(), void (*drive)(double, double, double), void (*sound)(signed short *, size_t));
 	
 
 //

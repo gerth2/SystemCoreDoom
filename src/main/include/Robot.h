@@ -7,11 +7,13 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
 
+#include "subsystems/DriverSubsystem.h"
 #include "subsystems/DoomSubsystem.h"
 
 class Robot : public frc::TimedRobot
 {
 public:
+	Robot();
 	void RobotInit() override;
 	void RobotPeriodic() override;
 	void DisabledInit() override;
@@ -19,6 +21,7 @@ public:
 	void SimulationInit() override;
 	
 	static DoomSubsystem m_doomSubsystem;
+	static DriverSubsystem m_driverSubsystem;
 
 private:
 	// Have it null by default so that if testing teleop it

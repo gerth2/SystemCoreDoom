@@ -3,7 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <span>
+
 #include "subsystems/DoomSubsystem.h"
+#include "subsystems/DriverSubsystem.h"
+#include <frc2/command/RunCommand.h>
 #include "Robot.h"
 
 DoomSubsystem::DoomSubsystem(frc::XboxController *controller)
@@ -46,9 +50,38 @@ void DoomSubsystem::StopEngine()
 	this->doomRunning = false;
 }
 
+std::mutex *s = new std::mutex();
+
+
 void DoomSubsystem::LaunchDoom()
 {
-	D_SetLoopHook(&DoomSubsystem::OnDoomLoop);
+	D_SetLoopHook(&DoomSubsystem::OnDoomLoop, [](double x, double y, double rotation){
+			s->lock();
+		try
+		{
+			
+		(frc2::RunCommand([x,y,rotation](){
+			// try{
+
+			std::thread d(DriverSubsystem::drive,x,y,rotation, &Robot::m_driverSubsystem);
+			d.detach();
+			// d.join();
+			// }catch(const std::exception& e){}
+		}, {&Robot::m_driverSubsystem}).Execute());
+			
+		}
+		catch(const std::exception& e)
+		{
+		}
+			s->unlock();
+
+	}, [](signed short *arr, size_t size){
+		try{
+		DriverSubsystem::play_sound(arr, size, &Robot::m_driverSubsystem);
+
+		// Robot::m_driverSubsystem.doom.Play();
+		} catch(const std::exception& e){}
+	});
 	myargc = 0;
 	myargv = {};
 	// myargv[0] = strdup("-regdev");
@@ -89,7 +122,7 @@ void DoomSubsystem::OnDoomLoop()
 {
 	
 
-	printf("Loop hook called!\n");
+	// printf("Loop hook called!\n");
 	// Update the screen
 	Robot::m_doomSubsystem.UpdateMat();
 

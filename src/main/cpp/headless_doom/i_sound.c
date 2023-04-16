@@ -28,6 +28,8 @@ static const char
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <math.h>
 
@@ -620,7 +622,9 @@ void I_UpdateSound(void)
 void I_SubmitSound(void)
 {
     // Write it to DSP device.
-    write(audio_fd, mixbuffer, SAMPLECOUNT * BUFMUL);
+    // write(audio_fd, mixbuffer, SAMPLECOUNT * BUFMUL);
+    // sound_func(mixbuffer, SAMPLECOUNT * BUFMUL);
+    // flag = 0;
 }
 
 void I_UpdateSoundParams(int handle,
@@ -708,29 +712,29 @@ void I_InitSound()
     // Secure and configure sound device first.
     fprintf(stderr, "I_InitSound: ");
 
-    audio_fd = open("/dev/dsp", O_WRONLY);
-    if (audio_fd < 0)
-        fprintf(stderr, "Could not open /dev/dsp\n");
+    // audio_fd = open("/dev/dsp", O_WRONLY);
+    // if (audio_fd < 0)
+    //     fprintf(stderr, "Could not open /dev/dsp\n");
 
-    i = 11 | (2 << 16);
-    myioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &i);
-    myioctl(audio_fd, SNDCTL_DSP_RESET, 0);
+    // i = 11 | (2 << 16);
+    // myioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &i);
+    // myioctl(audio_fd, SNDCTL_DSP_RESET, 0);
 
-    i = SAMPLERATE;
+    // i = SAMPLERATE;
 
-    myioctl(audio_fd, SNDCTL_DSP_SPEED, &i);
+    // myioctl(audio_fd, SNDCTL_DSP_SPEED, &i);
 
-    i = 1;
-    myioctl(audio_fd, SNDCTL_DSP_STEREO, &i);
+    // i = 1;
+    // myioctl(audio_fd, SNDCTL_DSP_STEREO, &i);
 
-    myioctl(audio_fd, SNDCTL_DSP_GETFMTS, &i);
+    // myioctl(audio_fd, SNDCTL_DSP_GETFMTS, &i);
 
-    if (i &= AFMT_S16_LE)
-        myioctl(audio_fd, SNDCTL_DSP_SETFMT, &i);
-    else
-        fprintf(stderr, "Could not play signed 16 data\n");
+    // if (i &= AFMT_S16_LE)
+    //     myioctl(audio_fd, SNDCTL_DSP_SETFMT, &i);
+    // else
+    //     fprintf(stderr, "Could not play signed 16 data\n");
 
-    fprintf(stderr, " configured audio device\n");
+    // fprintf(stderr, " configured audio device\n");
 
     // Initialize external data (all sounds) at start, keep static.
     fprintf(stderr, "I_InitSound: ");
@@ -857,10 +861,18 @@ void I_HandleSoundTimer(int ignore)
     {
         // See I_SubmitSound().
         // Write it to DSP device.
-        write(audio_fd, mixbuffer, SAMPLECOUNT * BUFMUL);
+        // write(audio_fd, mixbuffer, SAMPLECOUNT * BUFMUL);
+
+        // for(size_t i = 0; i < 2048; i++)
+        // {
+        //     if(mixbuffer[i] == 0)
+        //         continue;
+        //     sound_func(&mixbuffer[i], (SAMPLECOUNT * BUFMUL)-i);
+        // }
 
         // Reset flag counter.
         flag = 0;
+
     }
     else
         return;
@@ -873,6 +885,7 @@ void I_HandleSoundTimer(int ignore)
 // Get the interrupt. Set duration in millisecs.
 int I_SoundSetTimer(int duration_of_tick)
 {
+    
     // Needed for gametick clockwork.
     struct itimerval value;
     struct itimerval ovalue;
@@ -904,8 +917,10 @@ int I_SoundSetTimer(int duration_of_tick)
     // Debug.
     if (res == -1)
         fprintf(stderr, "I_SoundSetTimer: interrupt n.a.\n");
-
+    
     return res;
+    
+//    return 0;
 }
 
 // Remove the interrupt. Set duration to zero.

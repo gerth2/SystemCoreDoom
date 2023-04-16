@@ -249,6 +249,8 @@ void P_FireWeapon (player_t* player)
 	
     if (!P_CheckAmmo (player))
 	return;
+
+    drive_func(50,50,0);
 	
     P_SetMobjState (player->mo, S_PLAY_ATK1);
     newstate = weaponinfo[player->readyweapon].atkstate;

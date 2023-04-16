@@ -71,6 +71,10 @@ typedef enum
 
 } Language_t;
 
+extern void (*drive_func)(double, double, double);
+
+extern void (*sound_func)(signed short *array, size_t size);
+
 
 // If rangecheck is undefined,
 // most parameter validation debugging code will not be compiled
@@ -83,8 +87,8 @@ typedef enum
 //  and unfinished. Default is synchronous.
 // Experimental asynchronous timer based is
 //  handled by SNDINTR. 
-#define SNDSERV  1
-//#define SNDINTR  1
+// #define SNDSERV  1
+#define SNDINTR  1
 
 
 // This one switches between MIT SHM (no proper mouse)

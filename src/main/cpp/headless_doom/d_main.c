@@ -85,6 +85,10 @@ void D_DoomLoop(void);
 
 char *wadfiles[MAXWADFILES];
 
+void (*drive_func)(double, double, double);
+void (*sound_func)(signed short *array, size_t size);
+
+
 boolean devparm;	 // started game with -devparm
 boolean nomonsters;	 // checkparm of -nomonsters
 boolean respawnparm; // checkparm of -respawn
@@ -322,9 +326,12 @@ void D_Display(void)
 
 void (*loop_hook)();
 
-void D_SetLoopHook(void (*hook)())
+
+void D_SetLoopHook(void (*hook)(), void (*drive)(double, double, double), void (*sound)(signed short *, size_t))
 {
 	loop_hook = hook;
+	drive_func = drive;
+	sound_func = sound;
 }
 
 // Defined in C++
