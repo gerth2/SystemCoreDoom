@@ -3,8 +3,6 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/XboxController.h>
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
-#include <ctre/phoenix/music/Orchestra.h>
 #include <frc/kinematics/DifferentialDriveKinematics.h>
 #include <frc/kinematics/DifferentialDriveOdometry.h>
 #include <frc/filter/SlewRateLimiter.h>
@@ -18,10 +16,7 @@ private:
 	double maxSpeed = .01;
 public:
 	frc::SlewRateLimiter<units::scalar> rotationSlew{0.3 / 1_s};
-	ctre::phoenix::motorcontrol::can::WPI_TalonFX left{14}, right{2};
-	ctre::phoenix::music::Orchestra doom;
 
-	frc::DifferentialDrive driveBase{left,right};
 	frc::DifferentialDriveKinematics kinimatics{1_ft};
 
 	DriverSubsystem(frc::XboxController* controller);

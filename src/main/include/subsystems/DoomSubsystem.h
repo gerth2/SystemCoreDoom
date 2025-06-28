@@ -12,6 +12,7 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cameraserver/CameraServer.h>
+#include <cscore.h>
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
